@@ -7,8 +7,10 @@ import (
 
 func CalcUpper(lower float64, expr string, k float64) float64 {
 	f := calculus.NewFunc(expr)
-	for uppr := lower; f.AntiDiff(lower, uppr) != k; uppr += float64(0.000001) {
-		if f.AntiDiff(lower, uppr)-k < 0.000001 {
+	v := float64(0)
+	for uppr := lower; v != k; uppr += float64(0.000001) {
+		v = f.AntiDiff(lower, uppr)
+		if v-k < 0.000001 {
 			return uppr
 		} else if uppr == uppr+float64(0.000001) {
 			break
