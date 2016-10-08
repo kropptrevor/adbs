@@ -26,3 +26,11 @@ func TestCalcUpperC(t *testing.T) {
 		t.Fatalf("Expected %v but received %v\n", exp, res)
 	}
 }
+
+func TestCalcLowerA(t *testing.T) {
+	res := CalcLower(math.Sqrt(41)-5, "3x^2+30x48", -164*math.Sqrt(41))
+	exp := -5 - math.Sqrt(41)
+	if res-exp > 0.001 {
+		t.Fatalf("Expected %v but received %v\n", exp, res)
+	}
+}
