@@ -6,7 +6,8 @@ import (
 	//"math"
 )
 
-func CalcUpper(lower float64, expr string, k float64) float64 {
+func CalcUpperTimeout(lower float64, expr string, k float64, timeout float64) float64 {
+	timeout = timeout * float64(time.Second)
 	c := make(chan float64, 1)
 	//ret := make(chan float64)
 	go func() {
@@ -30,12 +31,17 @@ func CalcUpper(lower float64, expr string, k float64) float64 {
 	case ret := <-c:
 		return ret
 		//return <-ret
-	case <-time.After(time.Second * 1):
+	case <-time.After(time.Duration(timeout)):
 		return lower
 	}
 }
 
-func CalcLower(upper float64, expr string, k float64) float64 {
+func CalcUpper(lower float64, expr string, k float64) float64 {
+	return CalcUpperTimeout(lower, expr, k, 1)
+}
+
+func CalcLowerTimeout(upper float64, expr string, k float64, timeout float64) float64 {
+	timeout = timeout * float64(time.Second)
 	c := make(chan float64, 1)
 	go func() {
 		f := calculus.NewFunc(expr)
@@ -56,7 +62,11 @@ func CalcLower(upper float64, expr string, k float64) float64 {
 	case ret := <-c:
 		return ret
 		//return <-ret
-	case <-time.After(time.Second * 1):
+	case <-time.After(time.Duration(timeout)):
 		return upper
 	}
+}
+
+func CalcLower(upper float64, expr string, k float64) float64 {
+	return CalcLowerTimeout(upper, expr, k, 1)
 }
