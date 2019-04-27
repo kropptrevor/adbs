@@ -58,3 +58,31 @@ func TestCalcNewtonBAcc(t *testing.T) {
 		t.Fatalf("Expected %v but received %v\n", exp, res)
 	}
 }
+func BenchmarkUpperA(b *testing.B) {
+	expr := "3*x^2+5*x+1"
+	for i := 0; i < b.N; i++ {
+		CalcNewton(2, true, expr, 20, 20, 0.000001)
+	}
+}
+
+func BenchmarkNewtonA(b *testing.B) {
+	expr := "3*x^2+5*x+1"
+	for i := 0; i < b.N; i++ {
+		CalcUpper(1, expr, 20)
+	}
+}
+func BenchmarkLowerB(b *testing.B) {
+	expr := "sin(x)"
+	val := (math.Sqrt(3) - 1) / 2
+	for i := 0; i < b.N; i++ {
+		CalcNewton(2, false, expr, val, 20, 0.000001)
+	}
+}
+
+func BenchmarkNewtonB(b *testing.B) {
+	expr := "sin(x)"
+	val := (math.Sqrt(3) - 1) / 2
+	for i := 0; i < b.N; i++ {
+		CalcUpper(1, expr, val)
+	}
+}
