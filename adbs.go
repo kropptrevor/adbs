@@ -1,9 +1,10 @@
 package adbs
 
 import (
-	calculus "github.com/TheDemx27/calculus"
+	"math"
 	"time"
-	//"math"
+
+	calculus "github.com/TheDemx27/calculus"
 )
 
 func CalcUpperTimeout(lower float64, expr string, k float64, timeout float64) float64 {
@@ -69,4 +70,26 @@ func CalcLowerTimeout(upper float64, expr string, k float64, timeout float64) fl
 
 func CalcLower(upper float64, expr string, k float64) float64 {
 	return CalcLowerTimeout(upper, expr, k, 1)
+}
+
+func CalcNewton(bound float64, findUpper bool, expr string, k float64, maxIter int64, tolerance float64) float64 {
+	f := calculus.NewFunc(expr)
+	xN := bound
+	var absErr float64
+	var diff float64
+	var xNp float64
+	var Q float64
+	for i := int64(1); i == 1 || (i <= maxIter && absErr >= tolerance && diff >= tolerance); i++ {
+		if findUpper {
+			Q = f.AntiDiff(bound, xN) - k
+			xNp = xN - (Q / f.Eval(xN))
+		} else {
+			Q = f.AntiDiff(xN, bound) - k
+			xNp = xN + (Q / f.Eval(xN))
+		}
+		absErr = math.Abs(f.AntiDiff(bound, xNp) - k)
+		diff = math.Abs(xN - xNp)
+		xN = xNp
+	}
+	return xN
 }
